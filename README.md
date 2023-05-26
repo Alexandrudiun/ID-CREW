@@ -1,11 +1,11 @@
 # ID-CREW
 Team: I&D CREW
 
-School: **Liceul Teoretic "Oidius" Constanța**
+School: **Liceul Teoretic "Ovidius" Constanța**
 
 Technology: **Web App + App inventor**
 
-Language: **Engleza, Germană;**
+Language: **Engleza**
 
 Demo:****
 
