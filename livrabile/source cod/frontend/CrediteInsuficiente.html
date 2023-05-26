@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credite Insuficiente</title>
+    <link rel="icon" href="/img/logo192.jpg">
+    <link rel="stylesheet" href="/css/creditesuficiente.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+  <h1 class="insuficient">oops ... nu ai destule credite</h1>
+  <div class="popup" id="popup-1">
+    <div class="overlay"></div>
+    <div class="content">
+        <div class="close-btn" onclick="togglePopup()">&times;</div>
+        <h1 class="title">Adaugă credite</h1>
+        <p class="description">Pentru a adăuga bani în contul tău, trebuie să faci un transfer bancar în contul: RO49AAAAXXXXXXXXXXXXXXXX, cu suma dorită. În detaliile ordinului de plată, te rugăm să precizezi "WORKER X", unde X reprezintă adresa ta de email. Un exemplu de transfer reușit ar fi: WORKER yanaseh572@paxven.com</p>
+    </div>
+</div>
+<div class="credits credits-box">
+    <button class="credits" onclick="togglePopup()">Adaugă credite </button>
+    <ion-icon name="add-circle-outline"></ion-icon>
+</div>
+
+  <a href="#" class="back-btn center" onclick="goBack()">Înapoi</a>
+  <!-- Ion icons -->
+  <script src="/js/popup.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script>
+    function goBack() {
+      history.back();
+    }
+  </script>
+</body>
+</html>

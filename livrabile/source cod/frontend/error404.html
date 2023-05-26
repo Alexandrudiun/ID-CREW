@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERROR 404</title>
+    <link rel="icon" href="/img/logo192.jpg">
+    <link rel="stylesheet" href="/css/error404.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+  <div class="containter">
+    <h1 class="main-title">error 404</h1>
+    <h3 class="second-title">Din păcate, această pagină nu există!</h3>
+    <div class="gif-video">
+    <iframe src="https://giphy.com/embed/woMY64m2q599LZe1FL" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p>via GIPHY</p>
+    </div>
+  </div>
+  <div class="return-buttons">
+    <a href="/frontend/profil.php" class="back-profil">Înapoi la profil</a>
+    <a href="#" class="back-btn" onclick="goBack()">Înapoi</a>
+  </div>
+  <!-- Navbar Down --> 
+<footer>  
+  <section class="nav-bar">
+      <div class="navigation">
+          <ul>
+              <li class="list active">
+                  <a href="/frontend/home.php">
+                      <span class="icon">
+                      <ion-icon name="home-outline"></ion-icon>
+                      </span>
+                      <span class="text">Explorează</span>
+                  </a>
+              </li>
+              <li class="list">
+                  <a href="/frontend/profil.php">
+                      <span class="icon">
+                      <ion-icon name="person-circle-outline"></ion-icon>
+                      </span>
+                      <span class="text">Profil</span>
+                  </a>
+              </li>
+              <li class="list">
+                  <a href="/backend/post.php">
+                      <span class="icon">
+                          <ion-icon name="add-circle-outline"></ion-icon>
+                      </span>
+                      <span class="text">Postează</span>
+                  </a>
+              </li>
+              <li class="list">
+                  <a href="/backend/history.php">
+                      <span class="icon">
+                          <ion-icon name="albums-outline"></ion-icon>
+                      </span>
+                      <span class="text">Istoric</span>
+                  </a>
+              </li>
+              
+              <div class="indicator"></div>
+          </ul>
+      </div>
+  </section>
+  </footer>
+  <script src="/js/nav.js"></script>
+  <!-- Ion icons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script>
+    function goBack() {
+      history.back();
+    }
+  </script>
+</body>
+</html>
