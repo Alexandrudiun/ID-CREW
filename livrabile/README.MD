@@ -1,8 +1,8 @@
-#For the best experience don't use the apk and instead install the app like Ionescu Andrei did in the demo or look at the short tutorial below.
+# For the best experience don't use the apk and instead install the app like Ionescu Andrei did in the demo or look at the short tutorial below.
 
-##Short tutorial
+## Short tutorial
 
-###iOS
+### iOS
 1. Open safari -> Type in the navbar idcrew.shop or [click here](https://idcrew.shop) 
 ![1](https://github.com/Alexandrudiun/ID-CREW/assets/129840688/ad2858da-13c3-4f17-a893-1b6507835885)
 2. After you click enter, the website with the login page will appear;
@@ -15,7 +15,7 @@
 6. JFS now should appear on your home page.
 ![5](https://github.com/Alexandrudiun/ID-CREW/assets/129840688/44424c42-2b42-403b-aa5d-9f292e1e78ec)
 
-###ANDROID
+### ANDROID
 
 1. Open Chrome -> Type in the navbar idcrew.shop or [click here](https://idcrew.shop) 
 ![1](https://github.com/Alexandrudiun/ID-CREW/assets/129840688/ea9dff11-14d9-4a3e-a1a8-7569fdf50763)
