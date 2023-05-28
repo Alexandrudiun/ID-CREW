@@ -2,5 +2,5 @@
 
 ##Short tutorial
 ###iOS
-Open safari-> Type in the navbar idcrew.shop or (click here)[https://idcrew.shop] ->
+Open safari-> Type in the navbar idcrew.shop or [click here](https://idcrew.shop) ->
 
