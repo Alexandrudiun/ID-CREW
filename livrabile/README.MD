@@ -1,4 +1,4 @@
-# For the best experience don't use the apk and instead install the app like Ionescu Andrei did in the demo or look at the short tutorial below.
+# For the best experience don't use the apk and instead install the app like Ionescu Andrei did in the demo or take a look at the short tutorial below.
 
 ## Short tutorial
 
