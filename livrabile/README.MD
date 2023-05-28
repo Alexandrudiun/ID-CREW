@@ -18,8 +18,14 @@
 ###ANDROID
 
 1. Open Chrome -> Type in the navbar idcrew.shop or [click here](https://idcrew.shop) 
+![1](https://github.com/Alexandrudiun/ID-CREW/assets/129840688/ea9dff11-14d9-4a3e-a1a8-7569fdf50763)
 2. After you click enter, the website with the login page will appear;
-4. Now click on the 3 dots from the top right of the page;
-5. After you click on the 3 dots, search for the option "INSTALL" and click on it;
-6. Then, wait a few seconds until the app will be installed, the process will appear in the notifications pannel of your phone;
-7. After the instalation is done, the app will apear on the home page, and is ready to use it.
+3. Now click on the 3 dots from the top right of the page;
+![2](https://github.com/Alexandrudiun/ID-CREW/assets/129840688/2e497afd-0f3d-43ff-8cf1-55fe083795fd)
+4 After you click on the 3 dots, search for the option "INSTALL" and click on it;
+![3](https://github.com/Alexandrudiun/ID-CREW/assets/129840688/e7576195-1f25-447f-bee2-78d2adec9036)
+5.Then, wait a few seconds until the app will be installed, the process will appear in the notifications pannel of your phone;
+![4](https://github.com/Alexandrudiun/ID-CREW/assets/129840688/1954471f-d732-4082-bfbd-3610a7d00659)
+6. After the instalation is done, the app will apear on the home page, and is ready to use it.
+![5](https://github.com/Alexandrudiun/ID-CREW/assets/129840688/a633bc44-637c-4a3d-b546-55d120a60bdd)
+
