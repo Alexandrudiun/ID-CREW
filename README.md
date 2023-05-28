@@ -5,7 +5,7 @@ School: **Liceul Teoretic "Ovidius" Constanța**
 
 Technology: **Web App + App inventor**
 
-Language: **Engleză**
+Language: **English , German**
 
 Demo:    **[demo](https://www.youtube.com/watch?v=z_ytXLIJF10)**
 
