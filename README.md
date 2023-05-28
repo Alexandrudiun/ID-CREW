@@ -9,4 +9,4 @@ Language: **Engleză**
 
 Demo:****
 
-Pitch:****
+Pitch:**(pitch)[https://youtu.be/YKjinVdTiFA]**
