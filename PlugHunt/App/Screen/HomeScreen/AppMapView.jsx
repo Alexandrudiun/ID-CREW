@@ -31,6 +31,7 @@ export default function AppMapView() {
         style={{width:80, height:80}}
         />
       </Marker>
+
       
       </MapView>
 
