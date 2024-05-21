@@ -13,13 +13,13 @@ export default function AppMapView() {
       <MapView 
       style={styles.map} 
       provider={PROVIDER_DEFAULT}
-      showsUserLocation={true}
+      
       customMapStyle={MapViewStyle}
       region={{
         latitude: location?.latitude,
         longitude: location?.longitude,
-        latitudeDelta: 0.055,
-        longitudeDelta:  0.055,
+        latitudeDelta: 0.0522,
+        longitudeDelta:  0.0521,
       }}>
       <Marker 
         coordinate={{
@@ -27,8 +27,8 @@ export default function AppMapView() {
           longitude: location?.longitude
         }}
       >
-        <Image source={require('./../../../assets/images/logo500.png')}
-        style={{width:60, height:60}}
+        <Image source={require('./../../../assets/images/marker.png')}
+        style={{width:80, height:80}}
         />
       </Marker>
       
