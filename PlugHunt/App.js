@@ -4,6 +4,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import LoginScreen from './App/Screen/LoginScreen/LoginScreen';
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
+import * as WebBrowser from "expo-web-browser";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,10 +42,17 @@ export default function App() {
   }
 
   return (
+    <ClerkProvider publishableKey={'pk_test_bmF0aXZlLWNhdHRsZS03NS5jbGVyay5hY2NvdW50cy5kZXYk'}>
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <LoginScreen />
+    <SignedIn>
+          <Text>You are Signed in</Text>
+        </SignedIn>
+        <SignedOut>
+        <LoginScreen />
+        </SignedOut>
       <StatusBar style="auto" />
     </View>
+    </ClerkProvider>
   );
 }
 

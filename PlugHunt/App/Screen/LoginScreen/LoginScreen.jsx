@@ -1,7 +1,29 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { useWarmUpBrowser } from '../../../hooks/useWarmUpBrowser';
+import { useOAuth } from '@clerk/clerk-expo';
+import * as WebBrowser from "expo-web-browser";
 
+
+WebBrowser.maybeCompleteAuthSession();
 export default function LoginScreen() {
+    useWarmUpBrowser();
+
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+  const onPress = async()=>{
+    try {
+        const { createdSessionId, signIn, signUp, setActive } =
+          await startOAuthFlow();
+  
+        if (createdSessionId) {
+          setActive({ session: createdSessionId });
+        } else {
+          // Use signIn or signUp for next steps such as MFA
+        }
+      } catch (err) {
+        console.error("OAuth error", err);
+      }
+  }
   return (
     <View
         style={styles.imgdiv}
@@ -9,8 +31,10 @@ export default function LoginScreen() {
        <Image source={require('./../../../assets/images/logo500.png')} 
             style={styles.logoImage}
        />
-    
-        
+        <TouchableOpacity onPress={onPress}>
+            <Text>Log in</Text>
+        </TouchableOpacity>
+
     </View>
   )
 }
