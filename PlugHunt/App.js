@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
@@ -9,6 +9,8 @@ import * as WebBrowser from "expo-web-browser";
 import * as SecureStore from "expo-secure-store";
 import { NavigationContainer } from '@react-navigation/native';
 import TabNavigation from './App/Navigations/TabNavigation';
+import * as Location from 'expo-location';
+import { UserLocationContext } from './App/Context/UserLocationContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,6 +33,31 @@ const tokenCache = {
 
 
 export default function App() {
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location.coords);
+      // console.log(location);
+    })();
+  }, []);
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+
   const [fontsLoaded, fontError] = useFonts({
     'Poppins-Black': require('./assets/fonts/Poppins-Black.ttf'),
     'Poppins-BlackItalic': require('./assets/fonts/Poppins-BlackItalic.ttf'),
@@ -66,6 +93,7 @@ export default function App() {
     <ClerkProvider
     tokenCache={tokenCache}
     publishableKey={'pk_test_bmF0aXZlLWNhdHRsZS03NS5jbGVyay5hY2NvdW50cy5kZXYk'}>
+    <UserLocationContext.Provider value={{location, setLocation}}>
     <View style={styles.container} onLayout={onLayoutRootView}>
     <SignedIn>
           <NavigationContainer>
@@ -77,6 +105,7 @@ export default function App() {
         </SignedOut>
       <StatusBar style="auto" />
     </View>
+    </UserLocationContext.Provider>
     </ClerkProvider>
   );
 }
