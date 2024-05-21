@@ -5,10 +5,14 @@ import Header from './Header';
 import SearchBar from './SearchBar';
 import { UserLocationContext } from '../../Context/UserLocationContext';
 import GlobalApi from '../../Utils/GlobalApi';
+import PlaceListView from './PlaceListView';
+import { SelectMarkerContext } from '../../Context/SelectMarkerContext';
+
 
 export default function HomeScreen() {
   const { location, setLocation } = useContext(UserLocationContext);
   const [placeList, setPlaceList] = useState([]);
+  const [selectedMarker, setSelectedMarker] = useState([]);
 
   useEffect(() => {
     if (location) {
@@ -42,13 +46,21 @@ export default function HomeScreen() {
   };
 
   return (
+    <SelectMarkerContext.Provider value={{selectedMarker, setSelectedMarker}}>
     <View>
       <View style={styles.headerContainer}>
         <Header />
-        <SearchBar searchedLocation={(location) => console.log(location)} />
+        <SearchBar searchedLocation={(location) => setLocation(
+          {latitude:location.lat,
+          longitude:location.lng}
+        )} />
       </View>
-      <AppMapView />
+      {placeList&&<AppMapView placeList={placeList}/>}
+      <View style={styles.placeListContainer}>
+        {placeList&&<PlaceListView placeList={placeList}/>}
+      </View>
     </View>
+    </SelectMarkerContext.Provider>
   );
 }
 
@@ -58,5 +70,12 @@ const styles = StyleSheet.create({
     zIndex: 10,
     padding: 10,
     width: '100%',
+    paddingHorizontal: 20
   },
+  placeListContainer:{
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 10,
+    width: '100%'
+  }
 });

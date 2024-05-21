@@ -21,4 +21,5 @@ const NewNearByPlace = (data) => axios.post(BASE_URL, data, config);
 
 export default {
   NewNearByPlace,
+  API_KEY
 };
