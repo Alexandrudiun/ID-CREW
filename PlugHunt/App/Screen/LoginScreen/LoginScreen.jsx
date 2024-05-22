@@ -31,6 +31,7 @@ export default function LoginScreen() {
        <Image source={require('./../../../assets/images/logo500.png')} 
             style={styles.logoImage}
        />
+        
         <TouchableOpacity onPress={onPress}>
             <Text>Log in</Text>
         </TouchableOpacity>
