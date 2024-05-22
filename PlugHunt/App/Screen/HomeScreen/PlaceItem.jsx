@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, Linking, Pressable, Alert } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Linking, Pressable, Alert, Platform } from 'react-native';
 import GlobalApi from '../../Utils/GlobalApi';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -31,11 +31,15 @@ export default function PlaceItem({ place, isFav, markedFav }) {
   markedFav();
   }
 
-  const openInGoogleMaps = () => {
-    const { latitude, longitude } = place.location;
-    const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+  const onDirectionClick=()=>{
+    const url=Platform.select({
+      ios:"maps:"+place?.location?.latitude+","+place?.location?.longitude+"?q="+place?.formattedAddress,
+      android:"geo:"+place?.location?.latitude+","+place?.location?.longitude+"?q="+place?.formattedAddress,
+
+    });
+
     Linking.openURL(url);
-  };
+  }
 
   return (
     <View style={{
@@ -129,14 +133,14 @@ export default function PlaceItem({ place, isFav, markedFav }) {
               {place?.evChargeOptions?.connectorCount || 'Unknown number'} Points
             </Text>
           </View>
-          <TouchableOpacity onPress={openInGoogleMaps} style={{
+          <Pressable onPress={()=>onDirectionClick()} style={{
             padding: 12,
             backgroundColor: '#7099BE',
             borderRadius: 10,
             paddingHorizontal: 14
           }}>
             <MaterialCommunityIcons name="send-circle-outline" size={24} color="#fff" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </View>

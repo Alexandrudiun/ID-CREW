@@ -11,12 +11,21 @@ export default function ProfileScreen() {
 
   return (
     <View
-    style={{marginTop:20,
+    style={{
       display:'flex',
       alignItems: 'center',
       justifyContent: 'space-between'
     }}
     >
+      <Text style={{
+        fontSize:30,
+        fontFamily:'Poppins-SemiBold',
+        textAlign:'center',
+        marginTop:5
+      }}>My<Text style={{
+        color:'#53b176',
+        fontFamily:'Poppins-Medium'
+      }}>Profile</Text></Text>
       <Image source={{uri:user?.imageUrl}}
       style={styles.ProfileImage}
       />
