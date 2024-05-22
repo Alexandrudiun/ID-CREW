@@ -22,11 +22,15 @@ const styles = StyleSheet.create({
         display:'flex',
         flexDirection: 'row',
         justifyContent:'space-between',
-        alignItems:'center'
+        alignItems:'center',
+        backgroundColor: '#fff',
+        padding: 10,
+        borderRadius: 10
     },
     LogoText:{
         fontSize: 24,
-        fontFamily: 'Poppins-Bold',
+        fontFamily: 'Poppins-Medium',
+        color: '#333'
     }
 
 })
