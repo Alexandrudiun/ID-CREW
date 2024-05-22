@@ -28,8 +28,8 @@ export default function AppMapView({placeList}) {
           longitude: location?.longitude
         }}
       >
-        <Image source={require('./../../../assets/images/car.png')}
-        style={{width:40, height:40}}
+        <Image source={require('./../../../assets/images/searhmarker.png')}
+        style={{width:40, height:40, objectFit:'cover'}}
         />
       </Marker>:null}
 

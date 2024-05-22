@@ -49,7 +49,7 @@ export default function LoginScreen() {
             fontFamily:'Poppins-Medium',
             fontSize: 20
             }}
-            >Sign in</Text>
+            >Sign In with Google</Text>
         </TouchableOpacity>
 
         <Text style={{
@@ -93,6 +93,6 @@ const styles = StyleSheet.create({
       paddingVertical:15,
       paddingHorizontal:50,
       color: '#fff',
-      borderRadius: '10'
+      borderRadius: 10
     }
 })
