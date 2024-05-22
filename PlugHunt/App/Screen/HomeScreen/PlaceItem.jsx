@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, Linking, Pressable, Alert } from '
 import GlobalApi from '../../Utils/GlobalApi';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { getFirestore, setDoc, doc, deleteDoc } from "firebase/firestore";
 import { app } from '../../Utils/FirebaseConfig';
 import { useUser } from '@clerk/clerk-expo';
 
@@ -24,6 +24,13 @@ export default function PlaceItem({ place, isFav, markedFav }) {
     }
   }
 
+  const onRemoveFav=async(placeId)=>{
+
+  await deleteDoc(doc(db, "favorites", placeId.toString()));
+  Alert.alert('Favorite Removed!', 'Favorite Removed!');
+  markedFav();
+  }
+
   const openInGoogleMaps = () => {
     const { latitude, longitude } = place.location;
     const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
@@ -36,7 +43,7 @@ export default function PlaceItem({ place, isFav, markedFav }) {
       margin: 10,
       borderRadius: 10,
     }}>
-      <Pressable style={{
+      {!isFav?  <Pressable style={{
         position: 'absolute',
         right: 0,
         margin: 5,
@@ -45,11 +52,20 @@ export default function PlaceItem({ place, isFav, markedFav }) {
         shadowOpacity: 0.5,
         shadowRadius: 3,
       }} onPress={() => onSetFav(place)}>
-        {isFav ?
+        
+          <FontAwesome6 name="heart-circle-bolt" size={30} color="#fff" />
+      </Pressable>:
+      <Pressable style={{
+        position: 'absolute',
+        right: 0,
+        margin: 5,
+        shadowColor: '#171717',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+      }} onPress={() => onRemoveFav(place.id)}>
           <FontAwesome6 name="heart-circle-bolt" size={30} color="red" />
-          : <FontAwesome6 name="heart-circle-bolt" size={30} color="#fff" />
-        }
-      </Pressable>
+      </Pressable>}
       <Image
         source={
           place?.photos && place.photos.length > 0
