@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function FavoriteScreen() {
   return (
-    <View>
+    <View style={{backgroundColor:'#fff'}}>
       <Text>FavoriteScreen</Text>
     </View>
   )

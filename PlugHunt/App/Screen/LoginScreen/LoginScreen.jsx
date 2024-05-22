@@ -28,13 +28,50 @@ export default function LoginScreen() {
     <View
         style={styles.imgdiv}
     >
-       <Image source={require('./../../../assets/images/logo500.png')} 
+      <View style={{marginTop:10,
+      }}>
+      <Text style={{
+        fontSize:30,
+        fontFamily:'Poppins-SemiBold'
+      }}>Plug<Text style={{
+        color:'#53b176',
+        fontFamily:'Poppins-Medium'
+      }}>Hunt</Text></Text>
+      </View>
+       <Image source={require('./../../../assets/images/charger.jpg')} 
             style={styles.logoImage}
        />
         
-        <TouchableOpacity onPress={onPress}>
-            <Text>Log in</Text>
+        <TouchableOpacity onPress={onPress} style={styles.LogInBtn}>
+            <Text
+            style={{color:'#fff',
+
+            fontFamily:'Poppins-Medium',
+            fontSize: 20
+            }}
+            >Sign in</Text>
         </TouchableOpacity>
+
+        <Text style={{
+          fontFamily:'Poppins-Italic',
+          fontSize:13,
+          color: '#808080',
+          textAlign: 'center',
+          paddingHorizontal: 15,
+          marginTop: 20
+        }}>
+        Locate charging stations and earn money by sharing your own charger with others.
+        </Text>
+
+        <View>
+        <Text style={{
+          color:'#7099BE',
+          fontFamily:'Poppins-ExtraLight',
+          marginTop:20
+        }}>Made By I&D Crew</Text>
+        </View>
+
+        
 
     </View>
   )
@@ -42,14 +79,20 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
     logoImage:{
-        width: 200,
-        height: 200,
+        width: 400,
+        height: 300,
         objectFit: 'contain',
     },
     imgdiv:{
         display: 'flex',
-        justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 50
+        height: '100%'
+    },
+    LogInBtn:{
+      backgroundColor: '#53b176',
+      paddingVertical:15,
+      paddingHorizontal:50,
+      color: '#fff',
+      borderRadius: '10'
     }
 })

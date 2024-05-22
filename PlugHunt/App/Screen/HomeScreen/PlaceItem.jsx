@@ -87,8 +87,8 @@ export default function PlaceItem({ place }) {
           </View>
           <TouchableOpacity onPress={openInGoogleMaps} style={{
               padding: 12,
-              backgroundColor: 'green',
-              borderRadius: 6,
+              backgroundColor: '#7099BE',
+              borderRadius: 10,
               paddingHorizontal: 14
           }}>
             <MaterialCommunityIcons name="send-circle-outline" size={24} color="#fff" />

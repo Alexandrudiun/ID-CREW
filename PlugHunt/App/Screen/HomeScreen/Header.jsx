@@ -11,7 +11,13 @@ export default function Header() {
       <Image source={{uri:user?.imageUrl}}
       style={{width:45, height:45, borderRadius:99}}
       />
-      <Text style={styles.LogoText}>PlugHunt</Text>
+      <Text style={{
+        fontSize:30,
+        fontFamily:'Poppins-SemiBold'
+      }}>Plug<Text style={{
+        color:'#53b176',
+        fontFamily:'Poppins-Medium'
+      }}>Hunt</Text></Text>
       <MaterialIcons name="filter-alt" size={27} color="#333" />
     </View>
   )
