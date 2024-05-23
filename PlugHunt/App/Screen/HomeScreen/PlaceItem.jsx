@@ -178,13 +178,11 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
             </Pressable>
           </View>
           {isExpanded && (
-            <View style={{display:'flex',alignItems:'center', justifyContent:"space-between",
-              flexDirection:'column', width:'100%'
-            }}>
+            <View >
               <View>
               <Text
                 style={{
-                  fontFamily: 'Poppins-Medium',
+                  fontFamily: 'Poppins-ExtraLight',
                   fontSize: 20,
                   marginTop: 2,
                 }}
@@ -197,11 +195,11 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
                 <Text
                   key={index}
                   style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 20,
+                    fontFamily: 'Poppins-ExtraLight',
+                    fontSize: 14,
                     marginTop: 2,
                   }}
-                  numberOfLines={1}
+                  numberOfLines={2}
                   ellipsizeMode='tail'
                 >
                   {connector.type}: {connector.maxChargeRateKw || 'Unknown'} KWH

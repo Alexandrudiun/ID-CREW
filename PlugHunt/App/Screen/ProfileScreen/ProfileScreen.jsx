@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, Linking, Modal, Animated } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Linking, Modal, Animated, ActivityIndicator, ScrollView } from 'react-native';
 import React, { useState, useRef, useEffect } from 'react';
 import SignOutScreen from './SignOutScreen';
 import { useUser } from '@clerk/clerk-expo';
@@ -9,16 +9,19 @@ export default function ProfileScreen() {
   const { user } = useUser();
   const [modalVisible, setModalVisible] = useState(false);
   const [credits, setCredits] = useState(0);
+  const [loading, setLoading] = useState(false);
   const animation = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    const fetchCredits = async () => {
-      if (user && user.id) {
-        const userCredits = await getUserCredits(user.id);
-        setCredits(userCredits);
-      }
-    };
+  const fetchCredits = async () => {
+    if (user && user.id) {
+      setLoading(true);
+      const userCredits = await getUserCredits(user.id);
+      setCredits(userCredits);
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchCredits();
   }, [user]);
 
@@ -54,14 +57,14 @@ export default function ProfileScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>
         My<Text style={styles.titleHighlight}>Profile</Text>
       </Text>
       <Image source={{ uri: user?.imageUrl }} style={styles.ProfileImage} />
       <View>
         <Text style={styles.NameText}>{user.fullName || 'No Name. Please Log In'}</Text>
-        <Text style={styles.EmailText}>Credits: {credits}</Text>
+        <Text style={styles.EmailText}>Credits: {loading ? <ActivityIndicator size="small" color="#53b176" /> : credits}</Text>
       </View>
       
       <TouchableOpacity style={styles.CreditBtn} onPress={handleCreditPress}>
@@ -69,10 +72,15 @@ export default function ProfileScreen() {
         <Text style={styles.creditButtonText}>Add Credits</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.refreshButton} onPress={fetchCredits}>
+        <Ionicons name="refresh" size={24} color="white" style={styles.icon} />
+        <Text style={styles.refreshButtonText}>Refresh Credits</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handlePress}>
         <Text style={styles.buttonText}>Daca vrei sa iti inchiriezi statia de incarcare click aici</Text>
       </TouchableOpacity>
 
+      
       <View style={styles.signOutContainer}>
         <SignOutScreen />
       </View>
@@ -89,7 +97,7 @@ export default function ProfileScreen() {
           </View>
         </Modal>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -159,7 +167,23 @@ const styles = StyleSheet.create({
   creditButtonText: {
     color: 'white',
     fontFamily: 'Poppins-Medium',
-    fontSize: 20, // Increase font size for larger text
+    fontSize: 20,
+    marginLeft: 10
+  },
+  refreshButton: {
+    backgroundColor: '#53b176',
+    borderRadius: 27,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20
+  },
+  refreshButtonText: {
+    color: 'white',
+    fontFamily: 'Poppins-Medium',
+    fontSize: 16,
     marginLeft: 10
   },
   icon: {
