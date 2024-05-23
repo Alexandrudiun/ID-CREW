@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -14,4 +15,34 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+export const getUserCredits = async (userId) => {
+  const userRef = doc(db, 'userCredits', userId);
+  const docSnap = await getDoc(userRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data().credits;
+  } else {
+    await setDoc(userRef, { credits: 0 });
+    return 0;
+  }
+};
+
+export const updateUserCredits = async (userId, credits) => {
+  const userRef = doc(db, 'userCredits', userId);
+  await updateDoc(userRef, {
+    credits
+  });
+};
+
+export const createUserCredits = async (userId) => {
+  try {
+    await setDoc(doc(db, "userCredits", userId), {
+      credits: 0
+    });
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};

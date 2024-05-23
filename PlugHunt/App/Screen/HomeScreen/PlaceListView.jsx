@@ -11,7 +11,8 @@ export default function PlaceListView({ placeList }) {
   const flatListRef = useRef(null);
   const { selectedMarker } = useContext(SelectMarkerContext);
   const { user } = useUser();
-  const [favList, setFavList] = useState([]); // Initialize favList as an empty array
+  const [favList, setFavList] = useState([]);
+  const [allExpanded, setAllExpanded] = useState(false); // State to control if all items are expanded
 
   useEffect(() => {
     if (selectedMarker !== null && placeList.length > 0) {
@@ -46,7 +47,7 @@ export default function PlaceListView({ placeList }) {
     querySnapshot.forEach((doc) => {
       newFavList.push(doc.data());
     });
-    setFavList(newFavList); // Update favList with newFavList to avoid any potential undefined issues
+    setFavList(newFavList);
   };
 
   const isFav = (place) => {
@@ -63,6 +64,10 @@ export default function PlaceListView({ placeList }) {
     });
   };
 
+  const toggleExpandAll = () => {
+    setAllExpanded(!allExpanded); // Toggle the state to expand or collapse all items
+  };
+
   return (
     <View>
       <FlatList
@@ -75,7 +80,13 @@ export default function PlaceListView({ placeList }) {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={{ width: Dimensions.get('window').width }}>
-            <PlaceItem place={item} isFav={isFav(item)} markedFav={()=>getFav()} />
+            <PlaceItem 
+              place={item} 
+              isFav={isFav(item)} 
+              markedFav={() => getFav()} 
+              isExpanded={allExpanded} // Apply the global expanded state
+              toggleExpand={toggleExpandAll} // Use the function to toggle all items
+            />
           </View>
         )}
         onScrollToIndexFailed={handleScrollToIndexFailed}

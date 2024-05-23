@@ -1,13 +1,26 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity, Linking, Modal, Animated } from 'react-native';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import SignOutScreen from './SignOutScreen';
 import { useUser } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
+import { getUserCredits, updateUserCredits, createUserCredits } from '../../Utils/FirebaseConfig'; 
 
 export default function ProfileScreen() {
   const { user } = useUser();
   const [modalVisible, setModalVisible] = useState(false);
+  const [credits, setCredits] = useState(0);
   const animation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const fetchCredits = async () => {
+      if (user && user.id) {
+        const userCredits = await getUserCredits(user.id);
+        setCredits(userCredits);
+      }
+    };
+
+    fetchCredits();
+  }, [user]);
 
   const handlePress = () => {
     Linking.openURL('https://forms.gle/your-google-form-url'); // replace with your actual Google Form URL
@@ -47,13 +60,13 @@ export default function ProfileScreen() {
       </Text>
       <Image source={{ uri: user?.imageUrl }} style={styles.ProfileImage} />
       <View>
-        <Text style={styles.NameText}>{user.fullName|| 'No Name. Please Log In'}</Text>
-        <Text style={styles.NameText}>Credits: {user.credit || '0'}</Text>
+        <Text style={styles.NameText}>{user.fullName || 'No Name. Please Log In'}</Text>
+        <Text style={styles.EmailText}>Credits: {credits}</Text>
       </View>
       
       <TouchableOpacity style={styles.CreditBtn} onPress={handleCreditPress}>
         <Ionicons name="add-circle-outline" size={24} color="white" style={styles.icon} />
-        <Text style={styles.creditButtonText}>Adauga Credite</Text>
+        <Text style={styles.creditButtonText}>Add Credits</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={handlePress}>
@@ -68,7 +81,7 @@ export default function ProfileScreen() {
         <Modal transparent visible={modalVisible} animationType="none">
           <View style={styles.modalOverlay}>
             <Animated.View style={[styles.modalContainer, modalStyle]}>
-              <Text style={styles.modalText}>Pentru a adauga Credite efectuati un transfer bancar in contul: [Contul Bancar], iar in detaliile ordinului de plata adaugati {user.email || 'emailul dvs. //Andrei schimba aici'}</Text>
+              <Text style={styles.modalText}>Pentru a adauga Credite efectuati un transfer bancar in contul: [Contul Bancar], iar in detaliile ordinului de plata adaugati {user.primaryEmailAddress?.emailAddress || 'emailul dvs. //Andrei schimba aici'}</Text>
               <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
@@ -111,6 +124,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 5
   },
+  EmailText: {
+    fontFamily: 'Poppins-Regular',
+    color: '#666',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 5
+  },
   button: {
     backgroundColor: '#53b176',
     borderRadius: 27,
@@ -132,7 +152,6 @@ const styles = StyleSheet.create({
     borderRadius: 27,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'

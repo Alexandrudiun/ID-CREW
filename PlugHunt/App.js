@@ -11,6 +11,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import TabNavigation from './App/Navigations/TabNavigation';
 import * as Location from 'expo-location';
 import { UserLocationContext } from './App/Context/UserLocationContext';
+import { UserCreditsProvider } from './App/Utils/UserCreditsContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -90,10 +91,12 @@ export default function App() {
   }
 
   return (
+    
     <ClerkProvider
     tokenCache={tokenCache}
     publishableKey={'pk_test_bmF0aXZlLWNhdHRsZS03NS5jbGVyay5hY2NvdW50cy5kZXYk'}>
     <UserLocationContext.Provider value={{location, setLocation}}>
+    <UserCreditsProvider>
     <View style={styles.container} onLayout={onLayoutRootView}>
     <SignedIn>
           <NavigationContainer>
@@ -105,8 +108,10 @@ export default function App() {
         </SignedOut>
       <StatusBar style="auto" />
     </View>
+    </UserCreditsProvider>
     </UserLocationContext.Provider>
     </ClerkProvider>
+    
   );
 }
 
