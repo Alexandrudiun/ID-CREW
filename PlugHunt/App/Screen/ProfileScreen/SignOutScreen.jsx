@@ -27,10 +27,12 @@ const styles = StyleSheet.create({
     paddingBottom: 30, 
   },
   signOutButton: {
-    backgroundColor: '#53b176',
+    backgroundColor: '#ff0000', 
     borderRadius: 5,
     paddingVertical: 15,
     paddingHorizontal: 30,
+    borderRadius: 27,
+
   },
   buttonText: {
     color: '#fff',

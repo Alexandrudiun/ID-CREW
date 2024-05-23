@@ -132,6 +132,17 @@ export default function PlaceItem({ place, isFav, markedFav }) {
             >
               {place?.evChargeOptions?.connectorCount || 'Unknown number'} Points
             </Text>
+            <Text
+              style={{
+                fontFamily: 'Poppins-Medium',
+                fontSize: 20,
+                marginTop: 2,
+              }}
+              numberOfLines={1}
+              ellipsizeMode='tail'
+            >
+              POWER: {place?.evChargeOptions?.connectorCount || 'Unknown number'} KWH/H
+            </Text>
           </View>
           <Pressable onPress={()=>onDirectionClick()} style={{
             padding: 12,
