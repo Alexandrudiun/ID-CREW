@@ -44,6 +44,7 @@ export default function SearchBar({ searchedLocation }) {
         debounce={200}
         styles={{
           textInputContainer: {
+            marginTop:4,
             flex: 1,
             backgroundColor: 'transparent',
             borderTopWidth: 0,
