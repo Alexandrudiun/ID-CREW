@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import SignOutScreen from './SignOutScreen';
 import { useUser } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
-import { getUserCredits, addStation, uploadImage } from '../../Utils/FirebaseConfig';
+import { getUserCredits, addStation, uploadImage, createUserCredits } from '../../Utils/FirebaseConfig';
 
 export default function ProfileScreen() {
   const { user } = useUser();
@@ -26,13 +26,19 @@ export default function ProfileScreen() {
     if (user && user.id) {
       setLoading(true);
       const userCredits = await getUserCredits(user.id);
-      setCredits(userCredits);
+      setCredits(userCredits.credits);
       setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchCredits();
+  }, [user]);
+
+  useEffect(() => {
+    if (user && user.id && user.primaryEmailAddress) {
+      createUserCredits(user.id, user.primaryEmailAddress.emailAddress);
+    }
   }, [user]);
 
   const handlePress = () => {
