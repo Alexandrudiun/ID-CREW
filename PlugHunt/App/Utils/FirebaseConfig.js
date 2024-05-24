@@ -24,8 +24,8 @@ export const getUserCredits = async (userId) => {
     if (docSnap.exists()) {
       return docSnap.data().credits;
     } else {
-      await setDoc(userRef, { credits: 0 });
-      return 0;
+      await setDoc(userRef, { credits: 100 });
+      return 100;
     }
   } catch (error) {
     console.error("Error getting user credits: ", error);
