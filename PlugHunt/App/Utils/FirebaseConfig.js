@@ -17,14 +17,14 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export const getUserCredits = async (userId) => {
+export const getUserCredits = async (userId, email) => {
   try {
     const userRef = doc(db, 'userCredits', userId);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
       return docSnap.data().credits;
     } else {
-      await setDoc(userRef, { credits: 100 });
+      await setDoc(userRef, { credits: 100, email });
       return 100;
     }
   } catch (error) {
@@ -40,10 +40,11 @@ export const updateUserCredits = async (userId, credits) => {
   });
 };
 
-export const createUserCredits = async (userId) => {
+export const createUserCredits = async (userId, email) => {
   try {
     await setDoc(doc(db, "userCredits", userId), {
-      credits: 100
+      credits: 100,
+      email
     });
   } catch (e) {
     console.error("Error adding document: ", e);
