@@ -22,10 +22,10 @@ export const getUserCredits = async (userId) => {
     const userRef = doc(db, 'userCredits', userId);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
-      return docSnap.data();
+      return docSnap.data().credits;
     } else {
-      await setDoc(userRef, { credits: 0, email: "" });
-      return { credits: 0, email: "" };
+      await setDoc(userRef, { credits: 0 });
+      return 0;
     }
   } catch (error) {
     console.error("Error getting user credits: ", error);
@@ -35,55 +35,15 @@ export const getUserCredits = async (userId) => {
 
 export const updateUserCredits = async (userId, credits) => {
   const userRef = doc(db, 'userCredits', userId);
-  try {
-    await updateDoc(userRef, { credits });
-  } catch (error) {
-    console.error("Error updating user credits: ", error);
-    throw error;
-  }
+  await updateDoc(userRef, {
+    credits
+  });
 };
 
-export const transferCredits = async (buyerId, sellerId, credits) => {
-  const buyerRef = doc(db, 'userCredits', buyerId);
-  const sellerRef = doc(db, 'userCredits', sellerId);
-
-  try {
-    // Run a transaction to ensure atomicity
-    await db.runTransaction(async (transaction) => {
-      const buyerDoc = await transaction.get(buyerRef);
-      const sellerDoc = await transaction.get(sellerRef);
-
-      if (!buyerDoc.exists) {
-        throw "Buyer does not exist!";
-      }
-
-      if (!sellerDoc.exists) {
-        throw "Seller does not exist!";
-      }
-
-      const newBuyerCredits = buyerDoc.data().credits - credits;
-      if (newBuyerCredits < 0) {
-        throw "Insufficient credits!";
-      }
-
-      const newSellerCredits = sellerDoc.data().credits + credits;
-
-      transaction.update(buyerRef, { credits: newBuyerCredits });
-      transaction.update(sellerRef, { credits: newSellerCredits });
-    });
-
-    console.log("Transaction successfully committed!");
-  } catch (error) {
-    console.error("Transaction failed: ", error);
-    throw error;
-  }
-};
-
-export const createUserCredits = async (userId, email) => {
+export const createUserCredits = async (userId) => {
   try {
     await setDoc(doc(db, "userCredits", userId), {
-      credits: 0,
-      email: email
+      credits: 100
     });
   } catch (e) {
     console.error("Error adding document: ", e);
