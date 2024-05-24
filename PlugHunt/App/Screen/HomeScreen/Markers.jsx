@@ -16,7 +16,7 @@ export default function Markers({ index, place }) {
     >
       <Image
         source={require('./../../../assets/images/marker.png')}
-        style={{ width: 40, height: 40 }}
+        style={{ width: 80, height: 80 }}
       />
     </Marker>
   );

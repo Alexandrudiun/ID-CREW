@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import MapViewStyle from './../../Utils/MapViewStyle.json';
 import { UserLocationContext } from '../../Context/UserLocationContext';
+import { SelectMarkerContext } from '../../Context/SelectMarkerContext';
 import { fetchStations } from '../../Utils/FirebaseConfig';
 import carMarker from './../../../assets/images/carmarker.png';
 import Markers from './Markers';
@@ -21,8 +22,9 @@ const extractLatLongFromLink = (link) => {
 
 export default function AppMapView({ placeList }) {
   const { location } = useContext(UserLocationContext);
+  const { setSelectedMarker } = useContext(SelectMarkerContext);
   const [stations, setStations] = useState([]);
-  const [selectedStation, setSelectedStation] = useState(null); // State to track selected station
+  const [selectedStation, setSelectedStation] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,7 +72,7 @@ export default function AppMapView({ placeList }) {
                 coordinate={coordinates}
                 title={station.name}
                 description={station.address}
-                onPress={() => setSelectedStation(station)} // Set selected station on press
+                onPress={() => setSelectedMarker(index + placeList.length)} // Adjust index for combined list
               >
                 <Image source={require('./../../../assets/images/markerhuman.png')} style={{ width: 60, height: 60, objectFit: 'cover' }} />
               </Marker>
@@ -84,10 +86,10 @@ export default function AppMapView({ placeList }) {
         <View style={styles.infoWindow}>
           <PlaceItem 
             place={selectedStation} 
-            isFav={false} // You can update this logic
-            markedFav={() => {}} // You can update this logic
+            isFav={false} 
+            markedFav={() => {}} 
             isExpanded={true} 
-            toggleExpand={() => {}} // You can update this logic
+            toggleExpand={() => {}} 
           />
         </View>
       )}
