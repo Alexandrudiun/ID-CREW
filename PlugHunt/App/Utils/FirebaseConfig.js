@@ -1,8 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, Timestamp, getDocs } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,16 +15,22 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 export const getUserCredits = async (userId) => {
-  const userRef = doc(db, 'userCredits', userId);
-  const docSnap = await getDoc(userRef);
-
-  if (docSnap.exists()) {
-    return docSnap.data().credits;
-  } else {
-    await setDoc(userRef, { credits: 0 });
-    return 0;
+  const db = getFirestore(app);
+  try {
+    const userRef = doc(db, 'userCredits', userId);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      return docSnap.data().credits;
+    } else {
+      await setDoc(userRef, { credits: 0 });
+      return 0;
+    }
+  } catch (error) {
+    console.error("Error getting user credits: ", error);
+    throw error;
   }
 };
 
@@ -45,4 +49,42 @@ export const createUserCredits = async (userId) => {
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+};
+
+export const addStation = async (email, stationData) => {
+  const db = getFirestore(app);
+  try {
+    const docRef = await addDoc(collection(db, "stations"), {
+      ...stationData,
+      email,
+      createdAt: new Date(),
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
+
+export const uploadImage = async (uri) => {
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  const storageRef = ref(storage, `images/${Date.now()}`);
+  await uploadBytes(storageRef, blob);
+  return await getDownloadURL(storageRef);
+};
+
+export const fetchStations = async () => {
+  const stationsCol = collection(db, 'stations');
+  const stationsSnapshot = await getDocs(stationsCol);
+  return stationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+const extractLatLongFromLink = (link) => {
+  const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+  const match = link.match(regex);
+  if (match) {
+    const [, latitude, longitude] = match;
+    return { latitude: parseFloat(latitude), longitude: parseFloat(longitude) };
+  }
+  return null;
 };

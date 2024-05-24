@@ -24,21 +24,30 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
     } else {
       Alert.alert('Error', 'Favorite could not be added. Missing place ID.');
     }
-  }
+  };
 
   const onRemoveFav = async (placeId) => {
     await deleteDoc(doc(db, "favorites", placeId.toString()));
     Alert.alert('Favorite Removed!', 'Favorite Removed!');
     markedFav();
-  }
+  };
 
   const onDirectionClick = () => {
-    const url = Platform.select({
-      ios: "maps:" + place?.location?.latitude + "," + place?.location?.longitude + "?q=" + place?.formattedAddress,
-      android: "geo:" + place?.location?.latitude + "," + place?.location?.longitude + "?q=" + place?.formattedAddress,
-    });
-    Linking.openURL(url);
-  }
+    let url;
+    if (place?.link) {
+      url = place.link;
+    } else if (place?.location?.latitude && place?.location?.longitude) {
+      url = Platform.select({
+        ios: `maps:${place.location.latitude},${place.location.longitude}?q=${place.formattedAddress}`,
+        android: `geo:${place.location.latitude},${place.location.longitude}?q=${place.formattedAddress}`,
+      });
+    }
+    if (url) {
+      Linking.openURL(url);
+    } else {
+      Alert.alert('Error', 'Unable to get the location link.');
+    }
+  };
 
   const getCredits = () => {
     if (place?.evChargeOptions?.connectorAggregation?.some(connector => connector.maxChargeRateKw >= 30)) {
@@ -109,7 +118,9 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
           source={
             place?.photos && place.photos.length > 0
               ? { uri: `${PHOTO_BASE_URL}${place.photos[0]?.name}/media?key=${GlobalApi.API_KEY}&maxHeightPx=800&maxWidthPx=1200` }
-              : require('./../../../assets/images/charger.jpg')
+              : place.imageUrl
+                ? { uri: place.imageUrl }
+                : require('./../../../assets/images/charger.jpg')
           }
           style={{
             width: '100%',
@@ -127,7 +138,7 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
             numberOfLines={1}
             ellipsizeMode='tail'
           >
-            {place?.displayName?.text || 'No Name Available'}
+            {place?.displayName?.text || place?.name || 'No Name Available'}
           </Text>
           <Text
             style={{
@@ -137,7 +148,7 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
             numberOfLines={1}
             ellipsizeMode='tail'
           >
-            {place?.formattedAddress || 'No Address Available'}
+            {place?.formattedAddress || place?.address || 'No Address Available'}
           </Text>
           <View style={{
             marginTop: 5,
@@ -165,10 +176,10 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
                 numberOfLines={1}
                 ellipsizeMode='tail'
               >
-                {place?.evChargeOptions?.connectorCount || 'Unknown number'} Points
+                {place?.evChargeOptions?.connectorCount || place?.points || 'Unknown number'} Points
               </Text>
             </View>
-            <Pressable onPress={() => onDirectionClick()} style={{
+            <Pressable onPress={onDirectionClick} style={{
               padding: 12,
               backgroundColor: '#7099BE',
               borderRadius: 10,
@@ -178,33 +189,33 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
             </Pressable>
           </View>
           {isExpanded && (
-            <View >
+            <View>
               <View>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-ExtraLight',
-                  fontSize: 20,
-                  marginTop: 2,
-                }}
-                numberOfLines={1}
-                ellipsizeMode='tail'
-              >
-                POWER: {place?.evChargeOptions?.connectorCount || 'Unknown number'} KWH/H
-              </Text>
-              {place?.evChargeOptions?.connectorAggregation?.map((connector, index) => (
                 <Text
-                  key={index}
                   style={{
                     fontFamily: 'Poppins-ExtraLight',
-                    fontSize: 14,
+                    fontSize: 20,
                     marginTop: 2,
                   }}
-                  numberOfLines={2}
+                  numberOfLines={1}
                   ellipsizeMode='tail'
                 >
-                  {connector.type}: {connector.maxChargeRateKw || 'Unknown'} KWH
+                  POWER: {place?.evChargeOptions?.connectorCount || place?.power || 'Unknown'} KWH/H
                 </Text>
-              ))}
+                {place?.evChargeOptions?.connectorAggregation?.map((connector, index) => (
+                  <Text
+                    key={index}
+                    style={{
+                      fontFamily: 'Poppins-ExtraLight',
+                      fontSize: 14,
+                      marginTop: 2,
+                    }}
+                    numberOfLines={2}
+                    ellipsizeMode='tail'
+                  >
+                    {connector.type}: {connector.maxChargeRateKw || 'Unknown'} KWH
+                  </Text>
+                ))}
               </View>
               
               <TouchableOpacity onPress={() => setModalVisible(true)} style={{
@@ -212,8 +223,8 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
                 padding: 12,
                 borderRadius: 20,
                 alignItems: 'center',
-                width:'100%',
-                marginTop:5
+                width: '100%',
+                marginTop: 5
               }}>
                 <Text style={{
                   fontFamily: 'Poppins-Medium',

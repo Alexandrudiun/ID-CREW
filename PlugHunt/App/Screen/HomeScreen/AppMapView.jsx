@@ -1,55 +1,114 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
-import React, { useContext } from 'react'
+import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import MapViewStyle from './../../Utils/MapViewStyle.json';
 import { UserLocationContext } from '../../Context/UserLocationContext';
+import { fetchStations } from '../../Utils/FirebaseConfig';
+import carMarker from './../../../assets/images/carmarker.png';
 import Markers from './Markers';
+import PlaceItem from './PlaceItem';
 
-export default function AppMapView({placeList}) {
+const extractLatLongFromLink = (link) => {
+  if (!link) return null;
+  const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+  const match = link.match(regex);
+  if (match) {
+    const [, latitude, longitude] = match;
+    return { latitude: parseFloat(latitude), longitude: parseFloat(longitude) };
+  }
+  return null;
+};
 
-  const {location, setLocation} = useContext(UserLocationContext);
+export default function AppMapView({ placeList }) {
+  const { location } = useContext(UserLocationContext);
+  const [stations, setStations] = useState([]);
+  const [selectedStation, setSelectedStation] = useState(null); // State to track selected station
 
-  return location?.latitude&&(
+  useEffect(() => {
+    const fetchData = async () => {
+      const stationData = await fetchStations();
+      setStations(stationData);
+    };
+    fetchData();
+  }, []);
+
+  return location?.latitude && (
     <View>
       <MapView 
-      style={styles.map} 
-      provider={PROVIDER_DEFAULT}
-      
-      customMapStyle={MapViewStyle}
-      region={{
-        latitude: location?.latitude,
-        longitude: location?.longitude,
-        latitudeDelta: 0.0522,
-        longitudeDelta:  0.0521,
-      }}>
-      {location?<Marker 
-        coordinate={{
+        style={styles.map} 
+        provider={PROVIDER_DEFAULT}
+        customMapStyle={MapViewStyle}
+        region={{
           latitude: location?.latitude,
-          longitude: location?.longitude
-        }}
-      >
-        <Image source={require('./../../../assets/images/searhmarker.png')}
-        style={{width:40, height:40, objectFit:'cover'}}
-        />
-      </Marker>:null}
+          longitude: location?.longitude,
+          latitudeDelta: 0.0522,
+          longitudeDelta: 0.0521,
+        }}>
+        {location && (
+          <Marker 
+            coordinate={{
+              latitude: location?.latitude,
+              longitude: location?.longitude
+            }}
+          >
+            <Image source={require('./../../../assets/images/searhmarker.png')}
+              style={{ width: 40, height: 40, objectFit: 'cover' }}
+            />
+          </Marker>
+        )}
 
-      {placeList&&placeList.map((item,index)=>(
-        <Markers key={index} index={index} place={item}/>
-      ))}
+        {placeList && placeList.map((item, index) => (
+          <Markers key={index} index={index} place={item} />
+        ))}
 
-      
+        {stations && stations.map((station, index) => {
+          const coordinates = extractLatLongFromLink(station.link);
+          if (coordinates) {
+            return (
+              <Marker 
+                key={index} 
+                coordinate={coordinates}
+                title={station.name}
+                description={station.address}
+                onPress={() => setSelectedStation(station)} // Set selected station on press
+              >
+                <Image source={require('./../../../assets/images/markerhuman.png')} style={{ width: 60, height: 60, objectFit: 'cover' }} />
+              </Marker>
+            );
+          }
+          return null;
+        })}
       </MapView>
 
-
+      {selectedStation && (
+        <View style={styles.infoWindow}>
+          <PlaceItem 
+            place={selectedStation} 
+            isFav={false} // You can update this logic
+            markedFav={() => {}} // You can update this logic
+            isExpanded={true} 
+            toggleExpand={() => {}} // You can update this logic
+          />
+        </View>
+      )}
     </View>
-  )
+  );
 }
+
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    map: {
-      width: '100%',
-      height: '100%',
-    },
-  });
+  container: {
+    flex: 1,
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+  infoWindow: {
+    position: 'absolute',
+    bottom: 0,
+    width: Dimensions.get('window').width,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  }
+});
