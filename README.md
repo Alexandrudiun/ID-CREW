@@ -1,5 +1,5 @@
 # ID-CREW
-Team: I&D CREW
+Team: ID-CREW
 
 School: **Liceul Teoretic "Ovidius" Constanța**
 
