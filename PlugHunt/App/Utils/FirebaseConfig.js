@@ -51,11 +51,11 @@ export const createUserCredits = async (userId, email) => {
   }
 };
 
-export const addStation = async (email, stationData) => {
+const addStation = async (email, stationData) => {
   try {
     const docRef = await addDoc(collection(db, "stations"), {
       ...stationData,
-      email,
+      email, // Poster email
       createdAt: new Date(),
     });
     console.log("Document written with ID: ", docRef.id);
@@ -63,6 +63,7 @@ export const addStation = async (email, stationData) => {
     console.error("Error adding document: ", e);
   }
 };
+
 
 export const uploadImage = async (uri) => {
   const response = await fetch(uri);

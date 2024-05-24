@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, Linking, Pressable, Alert, Platfor
 import GlobalApi from '../../Utils/GlobalApi';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { getFirestore, setDoc, doc, deleteDoc, updateDoc, getDoc } from "firebase/firestore";
+import { getFirestore, setDoc, doc, deleteDoc, updateDoc, getDoc, getDocs, collection, where } from "firebase/firestore";
 import { app } from '../../Utils/FirebaseConfig';
 import { useUser } from '@clerk/clerk-expo';
 
@@ -62,13 +62,30 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
     try {
       const userRef = doc(db, 'userCredits', user.id);
       const userDoc = await getDoc(userRef);
+  
       if (userDoc.exists()) {
         const userCredits = userDoc.data().credits;
+  
         if (userCredits >= credits) {
-          await updateDoc(userRef, {
-            credits: userCredits - credits
-          });
-          Alert.alert('Purchase Successful', `You have bought the item for ${credits} credits.`);
+          // Find the poster's user document by email
+          const posterQuerySnapshot = await getDocs(collection(db, 'userCredits'), where('email', '==', place.email));
+          if (!posterQuerySnapshot.empty) {
+            const posterDoc = posterQuerySnapshot.docs[0];
+            const posterRef = doc(db, 'userCredits', posterDoc.id);
+            const posterCredits = posterDoc.data().credits;
+  
+            await updateDoc(userRef, {
+              credits: userCredits - credits
+            });
+  
+            await updateDoc(posterRef, {
+              credits: posterCredits + credits
+            });
+  
+            Alert.alert('Purchase Successful', `You have bought the item for ${credits} credits. ${credits} credits have been transferred to the poster.`);
+          } else {
+            Alert.alert('Error', 'The poster does not exist.');
+          }
         } else {
           Alert.alert('Insufficient Credits', 'You do not have enough credits to buy this item.');
         }
@@ -80,6 +97,8 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
       setModalVisible(false);
     }
   };
+  
+  
 
   return (
     <TouchableOpacity onPress={toggleExpand} activeOpacity={1}>
