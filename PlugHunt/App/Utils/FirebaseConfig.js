@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, Timestamp, getDocs } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // Your web app's Firebase configuration
@@ -18,7 +18,6 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 export const getUserCredits = async (userId) => {
-  const db = getFirestore(app);
   try {
     const userRef = doc(db, 'userCredits', userId);
     const docSnap = await getDoc(userRef);
@@ -52,7 +51,6 @@ export const createUserCredits = async (userId) => {
 };
 
 export const addStation = async (email, stationData) => {
-  const db = getFirestore(app);
   try {
     const docRef = await addDoc(collection(db, "stations"), {
       ...stationData,
@@ -76,7 +74,7 @@ export const uploadImage = async (uri) => {
 export const fetchStations = async () => {
   const stationsCol = collection(db, 'stations');
   const stationsSnapshot = await getDocs(stationsCol);
-  return stationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return stationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), isFirebase: true }));
 };
 
 const extractLatLongFromLink = (link) => {

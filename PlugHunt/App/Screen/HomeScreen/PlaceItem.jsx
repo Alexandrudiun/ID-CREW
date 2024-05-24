@@ -87,7 +87,7 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
         backgroundColor: '#fff',
         margin: 10,
         borderRadius: 10,
-        height: isExpanded ? 455 : 290,  // Adjust height based on whether it's expanded or not
+        height: isExpanded ? 390 : 290,  // Adjust height based on whether it's expanded or not
         overflow: 'hidden'
       }}>
         {!isFav ? <Pressable style={{
@@ -218,22 +218,24 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
                 ))}
               </View>
               
-              <TouchableOpacity onPress={() => setModalVisible(true)} style={{
-                backgroundColor: '#53b176',
-                padding: 12,
-                borderRadius: 20,
-                alignItems: 'center',
-                width: '100%',
-                marginTop: 5
-              }}>
-                <Text style={{
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 20,
-                  color: '#fff'
+              {place.isFirebase && ( // Conditionally render the buy button only if the item is from Firebase
+                <TouchableOpacity onPress={() => setModalVisible(true)} style={{
+                  backgroundColor: '#53b176',
+                  padding: 12,
+                  borderRadius: 20,
+                  alignItems: 'center',
+                  width: '100%',
+                  marginTop: 5
                 }}>
-                  Buy for {credits} credits
-                </Text>
-              </TouchableOpacity>
+                  <Text style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 20,
+                    color: '#fff'
+                  }}>
+                    Buy for {credits} credits
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           )}
         </View>
