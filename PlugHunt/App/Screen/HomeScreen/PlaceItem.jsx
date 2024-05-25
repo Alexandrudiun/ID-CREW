@@ -163,7 +163,7 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
   const handleDeleteStation = async () => {
     try {
       await deleteStation(place.id);
-      Alert.alert('Station Deleted', 'Your station has been deleted successfully.');
+      Alert.alert('Station Deleted', 'Your station has been deleted successfully. Please refresh the app in the Terminal by pressing the "R" key to see the changes');
     } catch (e) {
       console.error("Error deleting station: ", e);
       Alert.alert('Error', 'There was an error deleting your station.');
