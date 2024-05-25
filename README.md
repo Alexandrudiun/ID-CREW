@@ -9,5 +9,5 @@ Language: **English**
 
 Demo:    **[View Demo](https://youtu.be/jOWM5gqNrWk)**
 
-Pitch:    **[View Pitch]([https://youtu.be/YKjinVdTiFA](https://youtu.be/5VLh-XgOvQ8])**
+Pitch:    **[View Pitch](https://youtu.be/5VLh-XgOvQ8)**
 
