@@ -20,7 +20,7 @@ To get a local copy up and running follow these simple example steps.
 1. **Clone the repository:**
 
     ```sh
-    git clone https://github.com/your-username/plughunt.git
+    git clone https://github.com/Alexandrudiun/ID-CREW
     ```
 
 2. **Navigate to the project directory:**
