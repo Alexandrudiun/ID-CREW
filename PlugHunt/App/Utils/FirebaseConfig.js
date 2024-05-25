@@ -51,7 +51,7 @@ export const createUserCredits = async (userId, email) => {
   }
 };
 
-const addStation = async (email, stationData) => {
+export const addStation = async (email, stationData) => {
   try {
     const docRef = await addDoc(collection(db, "stations"), {
       ...stationData,

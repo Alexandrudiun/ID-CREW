@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getUserCredits, addStation, uploadImage } from '../../Utils/FirebaseConfig';
 import styles from '../../Utils/profilestyle'; 
 
+
 export default function ProfileScreen() {
   const { user } = useUser();
   const [modalVisible, setModalVisible] = useState(false);
