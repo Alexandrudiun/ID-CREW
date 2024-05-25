@@ -19,31 +19,35 @@ export default StyleSheet.create({
     fontFamily: 'Poppins-Medium'
   },
   ProfileImage: {
-    width: 200,
-    height: 200,
+    width: 180,
+    height: 180,
     borderRadius: 99,
     marginTop: 20
   },
   NameText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Poppins-Bold',
     color: '#333',
-    fontSize: 23,
+    fontSize: 25,
     textAlign: 'center',
-    marginTop: 5
   },
   EmailText: {
     fontFamily: 'Poppins-Regular',
     color: '#666',
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 5
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  creditsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 15
   },
   button: {
     backgroundColor: '#53b176',
     borderRadius: 27,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginTop: 20
+    marginTop: 5
   },
   buttonText: {
     color: 'white',
@@ -61,7 +65,7 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   creditButtonText: {
     color: 'white',
@@ -71,22 +75,18 @@ export default StyleSheet.create({
   },
   refreshButton: {
     backgroundColor: '#53b176',
-    borderRadius: 27,
+    borderRadius: 99,
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20
   },
   refreshButtonText: {
     color: 'white',
     fontFamily: 'Poppins-Medium',
     fontSize: 16,
     marginLeft: 10
-  },
-  icon: {
-    marginRight: 5
   },
   modalOverlay: {
     flex: 1,
@@ -108,7 +108,7 @@ export default StyleSheet.create({
     marginBottom: 20
   },
   closeButton: {
-    backgroundColor: '#53b176',
+    backgroundColor: '#f54e29',
     borderRadius: 27,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -138,7 +138,7 @@ export default StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     marginBottom: 20,
-    color: '#333', // This line changes the text color inside the input fields
+    color: '#333'
   },
   imagePickerButton: {
     backgroundColor: '#53b176',

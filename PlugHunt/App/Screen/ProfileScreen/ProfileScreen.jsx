@@ -5,7 +5,8 @@ import SignOutScreen from './SignOutScreen';
 import { useUser } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
 import { getUserCredits, addStation, uploadImage } from '../../Utils/FirebaseConfig';
-import styles from '../../Utils/profilestyle'; 
+import styles from '../../Utils/profilestyle';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 export default function ProfileScreen() {
@@ -129,22 +130,24 @@ export default function ProfileScreen() {
       <Image source={{ uri: user?.imageUrl }} style={styles.ProfileImage} />
       <View>
         <Text style={styles.NameText}>{user.fullName || 'No Name. Please Log In'}</Text>
-        <Text style={styles.EmailText}>Credits: {loading ? <ActivityIndicator size="small" color="#53b176" /> : credits}</Text>
+        <View style={styles.creditsContainer}>
+          <Text style={styles.EmailText}>Credits: {loading ? <ActivityIndicator size="small" color="#53b176" /> : credits}</Text>
+          <TouchableOpacity style={styles.refreshButton} onPress={fetchCredits}>
+            <Ionicons name="refresh" size={24} color="white" style={styles.icon} />
+          </TouchableOpacity>
+        </View>
       </View>
+
+      <TouchableOpacity style={styles.CreditBtn} onPress={handlePress}>
+        <MaterialCommunityIcons name="map-marker-plus" size={24} color="#fff" />
+        <Text style={styles.creditButtonText}>Add station</Text>
+      </TouchableOpacity>
       
       <TouchableOpacity style={styles.CreditBtn} onPress={handleCreditPress}>
         <Ionicons name="add-circle-outline" size={24} color="white" style={styles.icon} />
         <Text style={styles.creditButtonText}>Add Credits</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.refreshButton} onPress={fetchCredits}>
-        <Ionicons name="refresh" size={24} color="white" style={styles.icon} />
-        <Text style={styles.refreshButtonText}>Refresh Credits</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttonText}>Add station</Text>
-      </TouchableOpacity>
-
+      
       
       <View style={styles.signOutContainer}>
         <SignOutScreen />
@@ -173,46 +176,42 @@ export default function ProfileScreen() {
                 placeholder="EV Station Name"
                 value={stationName}
                 onChangeText={setStationName}
+                placeholderTextColor="#999"
               />
-              <TouchableOpacity style={styles.imagePickerButton} onPress={handleImagePick}>
-                <Text style={styles.imagePickerButtonText}>Pick an image</Text>
-              </TouchableOpacity>
-              {stationImage && <Image source={{ uri: stationImage }} style={styles.stationImage} />}
               <TextInput
                 style={styles.input}
                 placeholder="EV Charger Points"
                 value={stationPoints}
                 onChangeText={setStationPoints}
+                placeholderTextColor="#999"
               />
               <TextInput
                 style={styles.input}
                 placeholder="EV Charger Address"
                 value={stationAddress}
                 onChangeText={setStationAddress}
+                placeholderTextColor="#999"
               />
               <TextInput
                 style={styles.input}
                 placeholder="EV Charger Google Maps Link"
                 value={stationLink}
                 onChangeText={setStationLink}
+                placeholderTextColor="#999"
               />
               <TextInput
                 style={styles.input}
                 placeholder="Power (in KW/H)"
                 value={stationPower}
                 onChangeText={setStationPower}
+                placeholderTextColor="#999"
               />
               <TextInput
                 style={styles.input}
                 placeholder="EV Connector Type"
                 value={connectorType}
+                placeholderTextColor="#999"
                 onChangeText={setConnectorType}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="EV Connector Power (in KW/H)"
-                value={connectorPower}
-                onChangeText={setConnectorPower}
               />
               <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
                 <Text style={styles.submitButtonText}>Submit</Text>

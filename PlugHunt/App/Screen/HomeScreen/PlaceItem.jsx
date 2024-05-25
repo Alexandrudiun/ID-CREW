@@ -488,7 +488,7 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
                   <Text style={{
                     fontFamily: 'Poppins-Medium',
                     fontSize: 16,
-                    color: '#fff'
+                    color: '#fff',
                   }}>
                     Pick an End Date
                   </Text>
@@ -512,6 +512,7 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
               </View>
               {show && (
                 <DateTimePicker
+                  style={{marginBottom:10}}
                   testID="dateTimePicker"
                   value={isStartTime ? date : endDate}
                   mode={mode}

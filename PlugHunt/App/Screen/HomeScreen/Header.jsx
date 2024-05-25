@@ -2,6 +2,7 @@ import { View, Text , Image, StyleSheet} from 'react-native'
 import React from 'react'
 import { useUser } from '@clerk/clerk-expo'
 import { MaterialIcons } from '@expo/vector-icons';
+import SignOutHome from './SignOutHome';
 
 export default function Header() {
     const {user} =useUser();
@@ -25,7 +26,7 @@ export default function Header() {
       }}>Hunt</Text>
       
       </Text>
-      <MaterialIcons name="filter-alt" size={27} color="#333" />
+      <SignOutHome /> 
     </View>
   )
 }
