@@ -213,12 +213,14 @@ export default function ProfileScreen() {
                 placeholderTextColor="#999"
                 onChangeText={setConnectorType}
               />
+              <View style={styles.creditsContainer}>
               <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
                 <Text style={styles.submitButtonText}>Submit</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.closeButton} onPress={handleCloseFormModal}>
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
