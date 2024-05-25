@@ -1,5 +1,5 @@
 
-# PlugHunt
+# PlugHunt by ID-CREW
 
 Welcome to the PlugHunt project! This project is built using Expo, a framework and a platform for universal React applications.
 
