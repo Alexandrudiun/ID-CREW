@@ -7,6 +7,8 @@ import ProfileScreen from '../Screen/ProfileScreen/ProfileScreen';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Appoiments from '../Screen/Appoiments/Appoiments';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,6 +51,24 @@ export default function TabNavigation() {
           tabBarLabel: ({ focused }) => (
             <Text style={[styles.tabBarLabel, focused && styles.focusedTabBarLabel]}>
               Favorite
+            </Text>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="appoiments"
+        component={Appoiments}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons
+              name="calendar-search"
+              size={27}
+              color={focused ? '#53b176' : '#7099BE'}
+            />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text style={[styles.tabBarLabel, focused && styles.focusedTabBarLabel]}>
+              Appointments
             </Text>
           ),
         }}

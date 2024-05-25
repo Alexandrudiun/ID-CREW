@@ -1,17 +1,79 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Linking, Pressable, Alert, Platform, Modal } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import GlobalApi from '../../Utils/GlobalApi';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { getFirestore, setDoc, doc, deleteDoc, updateDoc, getDoc, getDocs, collection, where } from "firebase/firestore";
+import { getFirestore, setDoc, doc, deleteDoc, updateDoc, getDoc, getDocs, collection, where, addDoc, query } from "firebase/firestore";
 import { app } from '../../Utils/FirebaseConfig';
 import { useUser } from '@clerk/clerk-expo';
 
-export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleExpand }) {
+export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleExpand, appointment }) {
   const PHOTO_BASE_URL = "https://places.googleapis.com/v1/";
   const { user } = useUser();
   const db = getFirestore(app);
   const [modalVisible, setModalVisible] = useState(false);
+  const [appointmentModalVisible, setAppointmentModalVisible] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [isStartTime, setIsStartTime] = useState(true);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    if (isStartTime) {
+      setDate(currentDate);
+    } else {
+      setEndDate(currentDate);
+    }
+  };
+
+  const showMode = (currentMode, start) => {
+    setShow(true);
+    setMode(currentMode);
+    setIsStartTime(start);
+  };
+
+  const showDatepicker = (start) => {
+    showMode('date', start);
+  };
+
+  const showTimepicker = (start) => {
+    showMode('time', start);
+  };
+
+  const createAppointment = async () => {
+    try {
+      const appointmentQuery = query(collection(db, 'appointments'), where('placeId', '==', place.id));
+      const existingAppointments = await getDocs(appointmentQuery);
+      const overlappingAppointment = existingAppointments.docs.some(doc => {
+        const appointment = doc.data();
+        const existingStart = appointment.appointmentDate.toDate();
+        const existingEnd = appointment.appointmentEndDate.toDate();
+        return (date < existingEnd && endDate > existingStart);
+      });
+
+      if (overlappingAppointment) {
+        Alert.alert('Error', 'Reservation already exists for the selected time period.');
+        return;
+      }
+
+      await addDoc(collection(db, "appointments"), {
+        placeId: place.id,
+        userEmail: user.primaryEmailAddress.emailAddress,
+        ownerEmail: place.email,
+        appointmentDate: date,
+        appointmentEndDate: endDate,
+      });
+      Alert.alert('Appointment Created', 'Your appointment has been created successfully.');
+      setAppointmentModalVisible(false);
+    } catch (e) {
+      console.error("Error creating appointment: ", e);
+      Alert.alert('Error', 'There was an error creating your appointment.');
+    }
+  };
 
   const onSetFav = async (place) => {
     if (place && place.id) {
@@ -62,26 +124,25 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
     try {
       const userRef = doc(db, 'userCredits', user.id);
       const userDoc = await getDoc(userRef);
-  
+
       if (userDoc.exists()) {
         const userCredits = userDoc.data().credits;
-  
+
         if (userCredits >= credits) {
-          // Find the poster's user document by email
           const posterQuerySnapshot = await getDocs(collection(db, 'userCredits'), where('email', '==', place.email));
           if (!posterQuerySnapshot.empty) {
             const posterDoc = posterQuerySnapshot.docs[0];
             const posterRef = doc(db, 'userCredits', posterDoc.id);
             const posterCredits = posterDoc.data().credits;
-  
+
             await updateDoc(userRef, {
               credits: userCredits - credits
             });
-  
+
             await updateDoc(posterRef, {
               credits: posterCredits + credits
             });
-  
+
             Alert.alert('Purchase Successful', `You have bought the item for ${credits} credits. ${credits} credits have been transferred to the poster.`);
           } else {
             Alert.alert('Error', 'The poster does not exist.');
@@ -97,8 +158,6 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
       setModalVisible(false);
     }
   };
-  
-  
 
   return (
     <TouchableOpacity onPress={toggleExpand} activeOpacity={1}>
@@ -106,8 +165,8 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
         backgroundColor: '#fff',
         margin: 10,
         borderRadius: 10,
-        height: isExpanded ? 390 : 290,  // Adjust height based on whether it's expanded or not
-        overflow: 'hidden'
+        overflow: 'hidden',
+        height:'500'
       }}>
         {!isFav ? <Pressable style={{
           position: 'absolute',
@@ -169,6 +228,19 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
           >
             {place?.formattedAddress || place?.address || 'No Address Available'}
           </Text>
+          {appointment && (
+            <View style={{ marginTop: 10 }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: 'Poppins-Medium',
+                  color: '#53b176'
+                }}
+              >
+                Appointment: {appointment.start.toLocaleString()} - {appointment.end.toLocaleString()}
+              </Text>
+            </View>
+          )}
           <View style={{
             marginTop: 5,
             display: 'flex',
@@ -236,24 +308,42 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
                   </Text>
                 ))}
               </View>
-              
+
               {place.isFirebase && ( // Conditionally render the buy button only if the item is from Firebase
-                <TouchableOpacity onPress={() => setModalVisible(true)} style={{
-                  backgroundColor: '#53b176',
-                  padding: 12,
-                  borderRadius: 20,
-                  alignItems: 'center',
-                  width: '100%',
-                  marginTop: 5
-                }}>
-                  <Text style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 20,
-                    color: '#fff'
+                <View>
+                  <TouchableOpacity onPress={() => setModalVisible(true)} style={{
+                    backgroundColor: '#53b176',
+                    padding: 12,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    width: '100%',
+                    marginTop: 5
                   }}>
-                    Buy for {credits} credits
-                  </Text>
-                </TouchableOpacity>
+                    <Text style={{
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 20,
+                      color: '#fff'
+                    }}>
+                      Buy for {credits} credits
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setAppointmentModalVisible(true)} style={{
+                    backgroundColor: '#f7b731',
+                    padding: 12,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    width: '100%',
+                    marginTop: 5
+                  }}>
+                    <Text style={{
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 20,
+                      color: '#fff'
+                    }}>
+                      Create Appointment
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               )}
             </View>
           )}
@@ -309,6 +399,149 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleBuyCredits} style={{
                   backgroundColor: '#53b176',
+                  padding: 10,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  width: '45%',
+                }}>
+                  <Text style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 16,
+                    color: '#fff'
+                  }}>
+                    Confirm
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
+
+      {appointmentModalVisible && (
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={appointmentModalVisible}
+          onRequestClose={() => setAppointmentModalVisible(false)}
+        >
+          <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+            <View style={{
+              width: 300,
+              padding: 20,
+              backgroundColor: 'white',
+              borderRadius: 10,
+              alignItems: 'center',
+            }}>
+              <Text style={{
+                fontFamily: 'Poppins-Medium',
+                fontSize: 18,
+                marginBottom: 20
+              }}>
+                Create an Appointment
+              </Text>
+              <View style={{ marginBottom: 20 }}>
+                <TouchableOpacity onPress={() => showDatepicker(true)} style={{
+                  backgroundColor: '#53b176',
+                  padding: 10,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  width: '100%',
+                  marginBottom: 10
+                }}>
+                  <Text style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 16,
+                    color: '#fff'
+                  }}>
+                    Pick a Start Date
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => showTimepicker(true)} style={{
+                  backgroundColor: '#53b176',
+                  padding: 10,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  width: '100%'
+                }}>
+                  <Text style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 16,
+                    color: '#fff'
+                  }}>
+                    Pick a Start Time
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => showDatepicker(false)} style={{
+                  backgroundColor: '#53b176',
+                  padding: 10,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  width: '100%',
+                  marginTop: 10
+                }}>
+                  <Text style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 16,
+                    color: '#fff'
+                  }}>
+                    Pick an End Date
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => showTimepicker(false)} style={{
+                  backgroundColor: '#53b176',
+                  padding: 10,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  width: '100%',
+                  marginTop: 10
+                }}>
+                  <Text style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 16,
+                    color: '#fff'
+                  }}>
+                    Pick an End Time
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={isStartTime ? date : endDate}
+                  mode={mode}
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChange}
+                />
+              )}
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '100%'
+              }}>
+                <TouchableOpacity onPress={() => setAppointmentModalVisible(false)} style={{
+                  backgroundColor: '#f7b731',
+                  padding: 10,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  width: '45%',
+                }}>
+                  <Text style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 16,
+                    color: '#fff'
+                  }}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={createAppointment} style={{
+                  backgroundColor: '#f7b731',
                   padding: 10,
                   borderRadius: 10,
                   alignItems: 'center',
