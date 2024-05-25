@@ -7,7 +7,7 @@ Technology: **React Native, Expo, Firebase, Clerk**
 
 Language: **English**
 
-Demo:    **[View Demo](https://www.youtube.com/watch?v=z_ytXLIJF10)**
+Demo:    **[View Demo](https://youtu.be/jOWM5gqNrWk)**
 
 Pitch:    **[View Pitch](https://youtu.be/YKjinVdTiFA)**
 
