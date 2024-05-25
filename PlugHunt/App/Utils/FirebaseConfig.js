@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, deleteDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // Your web app's Firebase configuration
@@ -77,6 +77,16 @@ export const fetchStations = async () => {
   const stationsCol = collection(db, 'stations');
   const stationsSnapshot = await getDocs(stationsCol);
   return stationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), isFirebase: true }));
+};
+
+// Add this function in your FirebaseConfig file
+export const deleteStation = async (stationId) => {
+  try {
+    await deleteDoc(doc(db, "stations", stationId));
+    console.log("Document successfully deleted!");
+  } catch (e) {
+    console.error("Error removing document: ", e);
+  }
 };
 
 const extractLatLongFromLink = (link) => {

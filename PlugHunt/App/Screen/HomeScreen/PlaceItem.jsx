@@ -7,6 +7,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { getFirestore, setDoc, doc, deleteDoc, updateDoc, getDoc, getDocs, collection, where, addDoc, query } from "firebase/firestore";
 import { app } from '../../Utils/FirebaseConfig';
 import { useUser } from '@clerk/clerk-expo';
+import { deleteStation } from '../../Utils/FirebaseConfig'; // Import the delete function
 
 export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleExpand, appointment }) {
   const PHOTO_BASE_URL = "https://places.googleapis.com/v1/";
@@ -159,6 +160,16 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
     }
   };
 
+  const handleDeleteStation = async () => {
+    try {
+      await deleteStation(place.id);
+      Alert.alert('Station Deleted', 'Your station has been deleted successfully.');
+    } catch (e) {
+      console.error("Error deleting station: ", e);
+      Alert.alert('Error', 'There was an error deleting your station.');
+    }
+  };
+
   return (
     <TouchableOpacity onPress={toggleExpand} activeOpacity={1}>
       <View style={{
@@ -192,6 +203,23 @@ export default function PlaceItem({ place, isFav, markedFav, isExpanded, toggleE
           }} onPress={() => onRemoveFav(place.id)}>
             <FontAwesome6 name="heart-circle-bolt" size={30} color="red" />
           </Pressable>}
+
+        {/* Delete button displayed only for the owner */}
+        {place.email === user.primaryEmailAddress.emailAddress && (
+          <Pressable style={{
+            position: 'absolute',
+            left: 0,
+            margin: 5,
+            shadowColor: '#171717',
+            shadowOffset: { width: -2, height: 4 },
+            shadowOpacity: 0.5,
+            shadowRadius: 3,
+            zIndex: 1
+          }} onPress={handleDeleteStation}>
+            <FontAwesome6 name="trash-alt" size={30} color="red" />
+          </Pressable>
+        )}
+
         <Image
           source={
             place?.photos && place.photos.length > 0
