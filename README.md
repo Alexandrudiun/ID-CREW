@@ -1,5 +1,6 @@
 # ID-CREW
 Team: ID-CREW
+App name: PlugHunt
 
 School: **Liceul Teoretic "Ovidius" Constanța**
 
