@@ -1,11 +1,11 @@
 # ID-CREW
 Team: ID-CREW
 
-School: **Liceul Teoretic "Ovidius" Constanța**
+School: **ACS & FILS**
 
 Technology: **React Native, Expo, Firebase, Clerk**
 
-Language: **English**
+Language: **English & Romanian**
 
 Demo:    **[View Demo](https://youtu.be/jOWM5gqNrWk)**
 
