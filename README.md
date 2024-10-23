@@ -1,5 +1,5 @@
-# ID-CREW
-Team: ID-CREW
+# I&D-CREW
+Team: I&D-CREW
 
 Students: *Dinu Alexandru & Ionescu Andrei*
 
