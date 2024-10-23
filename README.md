@@ -1,7 +1,9 @@
 # ID-CREW
 Team: ID-CREW
 
-School: **ACS & FILS**
+Students: *Dinu Alexandru & Ionescu Andrei*
+
+School: **Facultatea de Automatică și Calculatoare & Facultatea de Inginerie în Limbi Străine**
 
 Technology: **React Native, Expo, Firebase, Clerk**
 
